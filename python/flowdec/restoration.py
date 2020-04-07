@@ -43,6 +43,7 @@ class DeconvolutionGraph(object):
                 signature_def_map={tf.saved_model.signature_constants.DEFAULT_SERVING_SIGNATURE_DEF_KEY: signature}
             )
         builder.save(as_text=save_as_text)
+        sess.close()
         return self
 
 
@@ -81,6 +82,7 @@ class Deconvolver(metaclass=abc.ABCMeta):
             data_dict = {self.graph.inputs[k]: v for k, v in acquisition.to_feed_dict().items()}
             args_dict = {self.graph.inputs[k]: v for k, v in input_kwargs.items() if v is not None}
             res = sess.run(self.graph.outputs, feed_dict={**data_dict, **args_dict})
+            sess.close()
             return res
 
     def _run_batch(self, acquisition_batch, **kwargs):

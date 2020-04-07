@@ -256,8 +256,8 @@ class GibsonLanni(PSF):
         b = 2 * np. pi * r.reshape(-1, 1) * NA / wavelength
 
         # Convenience functions for J0 and J1 Bessel functions
-        J0 = lambda x: scipy.special.jv(0, x)
-        J1 = lambda x: scipy.special.jv(1, x)
+        J0 = lambda x: scipy.special.jv(0, x.tolist())
+        J1 = lambda x: scipy.special.jv(1, x.tolist())
 
         # See equation 5 in Li, Xue, and Blu
         denom = scaling_factor * scaling_factor - b * b
@@ -283,7 +283,7 @@ class GibsonLanni(PSF):
 
         for z_index in range(PSF.shape[2]):
             # Interpolate the radial PSF function
-            PSF_interp = interp1d(r, PSF_rz[z_index, :])
+            PSF_interp = interp1d(r.flatten(), PSF_rz[z_index, :].flatten())
 
             # Evaluate the PSF at each value of r_pixel
             PSF[:,:, z_index] = PSF_interp(r_pixel.ravel()).reshape(size_y, size_x)
